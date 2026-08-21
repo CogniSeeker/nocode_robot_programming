@@ -31,7 +31,7 @@ Please remember to source the workspace in every terminal you open. A handy alia
 ```shell
 alias lfd='conda deactivate; conda activate gesturenlu2; source ~/lfd_ws/install/setup.bash; [ -f /etc/udev/rules.d/99-realsense-no-suspend.rules ] || { echo '\''ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="8086", TEST=="power/control", ATTR{power/control}="on"'\'' | sudo tee /etc/udev/rules.d/99-realsense-no-suspend.rules && sudo udevadm control --reload && sudo udevadm trigger; }'
 ```
-- Disables RealSense autosuspend, please check idVendor is correct. 
+- Disables RealSense autosuspend, please check idVendor is correct.
 
 ## Notebooks
 
@@ -60,6 +60,5 @@ cp -r "$tmp/extracted"/. "$dst"/
 folder. The notebook creates/syncs this file with columns
 `filename,use,criterion,discard_reason`; set `use` to `0` for a corrupted
 trajectory.
-
 
 
