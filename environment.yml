@@ -56,6 +56,9 @@ dependencies: # copied from franka_hri and added few packages - this list can be
 - pytest<8 # bigger version gets an error in VSCode
 - dash
 - plotly
+- empy=3.3.4
+- gcc<15
+- gxx<15
 - pip:
   - gpytorch
   - phonemizer
