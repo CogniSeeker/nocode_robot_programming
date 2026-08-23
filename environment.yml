@@ -1,4 +1,4 @@
-name: nocodeprogram
+name: teleport_control
 channels:
 - pytorch
 - nvidia
