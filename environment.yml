@@ -64,7 +64,6 @@ dependencies: # copied from franka_hri and added few packages - this list can be
   - misaki==0.8.0
   - py-espeak-ng
   - soundfile
-  - playsound
   - panda-python
   - faster-whisper
   - ctranslate2==4.6.0
