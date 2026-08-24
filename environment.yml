@@ -56,9 +56,12 @@ dependencies: # copied from franka_hri and added few packages - this list can be
 - pytest<8 # bigger version gets an error in VSCode
 - dash
 - plotly
-- empy=3.3.4
-- gcc<15
-- gxx<15
+- empy=3.3.4 # due to conflict
+- gcc<15 # otherwise has colcon error
+- gxx<15 # otherwise has colcon error
+- roboticstoolbox-python=1.3.1 # otherwise leads to hardware error
+- spatialgeometry=1.2.0 # otherwise leads to hardware error
+- rtb-data=1.1.0 # 2.0 removes franka_description - leads to hardware error
 - pip:
   - gpytorch
   - phonemizer
