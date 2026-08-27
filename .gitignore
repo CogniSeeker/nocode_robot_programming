@@ -1,2 +1,4 @@
 *.pyc
 tests/auto_fig_generator/*
+
+outdated/

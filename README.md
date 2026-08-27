@@ -63,4 +63,3 @@ folder. The notebook creates/syncs this file with columns
 trajectory.
 
 
-

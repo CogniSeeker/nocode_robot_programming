@@ -201,7 +201,10 @@ def test_filter_trajectory_files_discards_rows_marked_false(tmp_path):
     rows[1]["discard_reason"] = "empty recording"
     _write_rows(criteria_path, rows)
 
-    included, report = filter_trajectory_files([keep_file, discard_file], criteria_path)
+    # "" = unmarked files only; anything with a criterion tag is filtered out
+    included, report = filter_trajectory_files(
+        [keep_file, discard_file], criteria_path, use_criteria=frozenset({""})
+    )
 
     assert included == [str(keep_file)]
     assert [decision.filename for decision in report.discarded] == ["jan_kin_probe_trial_0.npz"]
@@ -222,10 +225,13 @@ def test_trajectory_dataset_applies_criteria_csv(tmp_path):
     with criteria_path.open(newline="") as f:
         rows = list(csv.DictReader(f))
     rows[1]["use"] = "0"
+    rows[1]["criterion"] = "manual_quality_check"
     rows[1]["discard_reason"] = "bad video"
     _write_rows(criteria_path, rows)
 
-    dataset = TrajectoryDataset(package_path=str(tmp_path), criteria_csv=criteria_path)
+    dataset = TrajectoryDataset(
+        package_path=str(tmp_path), criteria_csv=criteria_path, use_criteria=frozenset({""})
+    )
 
     assert dataset.names == ["jan_kin_probe"]
     assert dataset.criteria_report.included == 1
