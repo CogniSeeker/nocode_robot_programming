@@ -3,15 +3,11 @@ import time
 import threading
 import queue
 import numpy as np
-import simpleaudio as sa # pip install simpleaudio
-
-import os, ctypes
-
-# Point ALSA to the system plugin directory (Ubuntu 20.04)
-os.environ['ALSA_PLUGIN_DIR'] = '/usr/lib/x86_64-linux-gnu/alsa-lib'
-
-# Prefer the system libasound over Conda's (load it globally first)
-ctypes.CDLL('/usr/lib/x86_64-linux-gnu/libasound.so.2', mode=ctypes.RTLD_GLOBAL)
+import ctypes
+import io
+import os
+import subprocess
+import wave
 
 
 # Sound synthesis utilities
@@ -144,13 +140,17 @@ def sound_thread(self):
         _audio_q.put(None)
         _audio_thread.join(timeout=0.5)
 
-import io, wave, subprocess
-import simpleaudio as sa
-
-SAMPLE_RATE = 48000  # keep your constant
-
 def play_pcm_portable(pcm_int16):
     try:
+        # Audio is optional. Import and initialize its native backend only when
+        # a sound is actually requested, not when teleoperation is imported.
+        os.environ['ALSA_PLUGIN_DIR'] = '/usr/lib/x86_64-linux-gnu/alsa-lib'
+        ctypes.CDLL(
+            '/usr/lib/x86_64-linux-gnu/libasound.so.2',
+            mode=ctypes.RTLD_GLOBAL,
+        )
+        import simpleaudio as sa
+
         sa.play_buffer(pcm_int16, 1, 2, SAMPLE_RATE).wait_done()
         return
     except Exception as e1:
