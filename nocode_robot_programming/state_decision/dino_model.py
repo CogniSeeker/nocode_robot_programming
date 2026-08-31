@@ -13,7 +13,7 @@ warnings.filterwarnings(
 
 class DINOFeaturePresence:
     """ DINO-based classifier with cosine prototypes over patch tokens, see tutorial: `dino_tutorial.ipynb`
-    
+
     C: int number of classes
     D: int number of features (embedding)
     N: int number of training samples
@@ -62,7 +62,7 @@ class DINOFeaturePresence:
                     "x_prenorm": None,          # HF DINOv3 does not expose the pre-final-LN tokens like DINOv2 does
                     "masks": bool_masked_pos,    # HF name for masked-patch positions
                 }
-            
+
             # bind to this specific model instance
             import types
             self.model.forward_features = types.MethodType(forward_features_dinov3_like_dinov2, self.model)
@@ -78,7 +78,7 @@ class DINOFeaturePresence:
 
     def __str__(self):
         return f"{self.dino_variant},{self.input_size},mean"
-    
+
     @property
     def short_name(self) -> str:
         s = self.__str__()
@@ -168,7 +168,7 @@ class DINOFeaturePresence:
         return [self.predict(x) for x in X]
 
     def _pool_patches(self, P: torch.Tensor) -> torch.Tensor:
-        """ Default pooling: L2-normalized mean over patches. This simplifies things a lot, place for improvement - override this method. 
+        """ Default pooling: L2-normalized mean over patches. This simplifies things a lot, place for improvement - override this method.
         P: [N, M, D] or [1, M, D]
         Returns: [N, D]
         """
@@ -258,7 +258,7 @@ class DINOFeaturePresenceConcat(DINOFeaturePresence):
 
 class DINOFeaturePresenceAttnGated(DINOFeaturePresence):
     """ Focus on high self-attention patches
-    
+
     - Uses last-layer CLS->patch attention to mask/weight patches.
     - Works at both training and prediction for consistency.
 
@@ -317,7 +317,7 @@ class DINOFeaturePresenceAttnGated(DINOFeaturePresence):
             self.thresholds = torch.tensor(thresholds, device=self.device)
 
     @torch.inference_mode()
-    def predict(self, image: torch.Tensor) -> str:
+    def predict(self, image: torch.Tensor, x_t=None) -> str:
         assert self.prototypes is not None, "Call train() first"
         p, w = self._single_patch_feats_with_attn(image)        # [M,D], [M]
         g = self._pool_patches_with_weights(p.unsqueeze(0), w.unsqueeze(0))[0]  # [D]
